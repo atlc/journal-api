@@ -1,0 +1,10 @@
+services:
+    api:
+        build:
+            context: .
+            target: production
+        volumes:
+            - ./:/app
+            - /app/node_modules
+        ports:
+            - 3000:3000
