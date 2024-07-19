@@ -1,12 +1,12 @@
 export interface Entry extends BaseEntry {
     _id: string;
+    updated_at: string;
 }
 
 export interface BaseEntry {
     user_id: User["_id"];
     content: string;
     created_at: string;
-    updated_at: string;
 }
 
 export interface User extends BaseUser {
