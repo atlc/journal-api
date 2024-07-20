@@ -3,7 +3,7 @@ import config from "../config";
 import jwt from "jsonwebtoken";
 import { Payload } from "../types";
 
-const tokenCheck: RequestHandler = (req, res, next) => {
+const accessTokenCheck: RequestHandler = (req, res, next) => {
     const authorizationHeader = req.headers.authorization;
 
     if (!authorizationHeader) {
@@ -19,7 +19,7 @@ const tokenCheck: RequestHandler = (req, res, next) => {
     }
 
     try {
-        const user = jwt.verify(token, config.jwt.key) as Payload;
+        const user = jwt.verify(token, config.jwt.access_key) as Payload;
 
         req.user = user;
         next();
@@ -28,4 +28,4 @@ const tokenCheck: RequestHandler = (req, res, next) => {
     }
 };
 
-export default tokenCheck;
+export default accessTokenCheck;

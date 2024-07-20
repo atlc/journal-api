@@ -6,8 +6,10 @@ interface ConfigObject {
 }
 
 const jwt = {
-    key: process.env.JWT_SECRET as string,
-    expiration: process.env.JWT_EXPIRATION as string,
+    access_key: process.env.JWT_ACCESS_SECRET as string,
+    refresh_key: process.env.JWT_REFRESH_SECRET as string,
+    access_expiration: process.env.JWT_ACCESS_EXPIRATION as string,
+    refresh_expiration: process.env.JWT_REFRESH_EXPIRATION as string,
 };
 
 const mongo = {
