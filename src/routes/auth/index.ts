@@ -63,8 +63,14 @@ router.post("/register", async (req, res) => {
         const newUser: BaseUser = { name, email, password: hashed, created_at, is_verified };
 
         const results = await db.users.register(newUser);
+        const id = results.insertedId as unknown as string;
 
-        res.status(201).json({ message: "Successfully registered!", id: results.insertedId });
+        const payload: Payload = { id };
+
+        const access_token = jwt.sign(payload, config.jwt.access_key, { expiresIn: config.jwt.access_expiration });
+        const refresh_token = jwt.sign(payload, config.jwt.refresh_key, { expiresIn: config.jwt.refresh_expiration });
+
+        res.status(201).json({ message: "Successfully registered!", id: results.insertedId, access_token, refresh_token });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Cannot login at this time" });
@@ -83,7 +89,7 @@ router.post("/reload", async (req, res) => {
 
         const access_token = jwt.sign(payload, config.jwt.access_key, { expiresIn: config.jwt.access_expiration });
 
-        res.json({ access_token });
+        res.json({ access_token, refresh_token });
     } catch (error) {
         console.log(error);
         res.status(403).json({ message: "Cannot refresh tokens at this time, please try manually logging in" });
