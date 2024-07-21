@@ -85,7 +85,8 @@ router.post("/reload", async (req, res) => {
 
         if (!tokenPair) return res.status(403).json({ message: "Unable to refresh your credentials, please log in again" });
 
-        const payload = jwt.verify(tokenPair.token, config.jwt.refresh_key) as Payload;
+        const { id } = jwt.verify(tokenPair.token, config.jwt.refresh_key) as Payload & jwt.JwtPayload;
+        const payload: Payload = { id };
 
         const access_token = jwt.sign(payload, config.jwt.access_key, { expiresIn: config.jwt.access_expiration });
 
