@@ -1,5 +1,6 @@
 import express from "express";
 import db from "../../db";
+import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
@@ -8,7 +9,7 @@ router.get("/", async (req, res) => {
         const user_id = req.user.id;
         const userJournals = await db.journals.profile(user_id);
 
-        res.json(userJournals);
+        res.json(userJournals.reverse());
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Cannot retrieve your journals at this time" });
@@ -32,6 +33,20 @@ router.post("/", async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Cannot create journals at this time" });
+    }
+});
+
+router.delete("/:id", async (req, res) => {
+    try {
+        const id = new ObjectId(req.params.id);
+        const user_id = req.user.id;
+
+        await db.journals.remove(id, user_id);
+
+        res.json({ message: "Successfully deleted that journal entry" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Cannot retrieve your journals at this time" });
     }
 });
 
