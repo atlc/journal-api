@@ -19,8 +19,8 @@ router.post("/", async (req, res) => {
     try {
         const { content } = req.body;
 
-        if (!content || typeof content !== "string" || content.length < 12 || content.length > 2000) {
-            return res.status(400).json({ message: "The journal's content must be between 12 and 2,000 characters" });
+        if (!content || typeof content !== "string" || content.length < 12 || content.length > 10000) {
+            return res.status(400).json({ message: "The journal's content must be between 12 and 10,000 characters" });
         }
 
         const user_id = req.user.id;
