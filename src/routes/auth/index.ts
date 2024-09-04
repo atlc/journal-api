@@ -70,6 +70,8 @@ router.post("/register", async (req, res) => {
         const access_token = jwt.sign(payload, config.jwt.access_key, { expiresIn: config.jwt.access_expiration });
         const refresh_token = jwt.sign(payload, config.jwt.refresh_key, { expiresIn: config.jwt.refresh_expiration });
 
+        await db.tokens.add({ user_id: id, token: refresh_token });
+
         res.status(201).json({ message: "Successfully registered!", id: results.insertedId, access_token, refresh_token });
     } catch (error) {
         console.log(error);

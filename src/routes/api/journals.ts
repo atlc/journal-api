@@ -1,6 +1,7 @@
 import express from "express";
 import db from "../../db";
 import { ObjectId } from "mongodb";
+import { BaseEntry } from "../../types";
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
     try {
-        const { content } = req.body;
+        const { content, is_note } = req.body;
 
         if (!content || typeof content !== "string" || content.length < 12 || content.length > 10000) {
             return res.status(400).json({ message: "The journal's content must be between 12 and 10,000 characters" });
@@ -27,7 +28,17 @@ router.post("/", async (req, res) => {
         const user_id = req.user.id;
         const created_at = new Date().toISOString();
 
-        const results = await db.journals.create({ content, user_id, created_at });
+        const newNote: BaseEntry = { content, user_id, created_at };
+
+        if (is_note !== undefined) {
+            if (typeof is_note !== "boolean") {
+                return res.status(400).json({ message: "The journal's is_note field must be a boolean" });
+            }
+
+            newNote.is_note = is_note;
+        }
+
+        const results = await db.journals.create(newNote);
 
         res.status(201).json({ message: "Successfully created journal entry", id: results.insertedId });
     } catch (error) {
