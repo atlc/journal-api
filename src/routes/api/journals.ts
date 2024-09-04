@@ -43,6 +43,26 @@ router.post("/", async (req, res) => {
     }
 });
 
+router.put("/:id/toggle", async (req, res) => {
+    try {
+        const id = new ObjectId(req.params.id);
+        const { is_note } = req.query as { is_note: string };
+
+        if (typeof is_note === "undefined" || typeof is_note !== "string" || (is_note.toLowerCase() !== "false" && is_note.toLowerCase() !== "true")) {
+            return res.status(400).json({
+                message: "'is_note' must be a provided query parameter of true or false",
+            });
+        }
+
+        await db.journals.toggleNote(id, !!is_note);
+
+        res.status(201).json({ message: "Successfully toggled note status" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Cannot create journals at this time" });
+    }
+});
+
 router.delete("/:id", async (req, res) => {
     try {
         const id = new ObjectId(req.params.id);
