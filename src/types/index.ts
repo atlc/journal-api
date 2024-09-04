@@ -4,7 +4,7 @@ export interface Entry extends BaseEntry {
 }
 
 export interface BaseEntry {
-    is_note?: boolean;
+    is_note: boolean;
     user_id: User["_id"];
     content: string;
     created_at: string;

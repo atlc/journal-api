@@ -25,18 +25,14 @@ router.post("/", async (req, res) => {
             return res.status(400).json({ message: "The journal's content must be between 12 and 10,000 characters" });
         }
 
+        if (typeof is_note !== "boolean") {
+            return res.status(400).json({ message: "The journal's is_note field must be a boolean" });
+        }
+
         const user_id = req.user.id;
         const created_at = new Date().toISOString();
 
-        const newNote: BaseEntry = { content, user_id, created_at };
-
-        if (is_note !== undefined) {
-            if (typeof is_note !== "boolean") {
-                return res.status(400).json({ message: "The journal's is_note field must be a boolean" });
-            }
-
-            newNote.is_note = is_note;
-        }
+        const newNote: BaseEntry = { content, is_note, user_id, created_at };
 
         const results = await db.journals.create(newNote);
 
